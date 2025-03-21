@@ -53,8 +53,8 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/SazzHub221/Plant-Disease-Classification.git
-   cd Plant-Disease-Classification
+   git clone https://github.com/SazzHub221/Plant-Disease-Detection.git
+   cd Plant-Disease-Detection
    ```
 
 2. **Install Frontend Dependencies**
@@ -128,5 +128,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
   <h3>🌟 If you found this project helpful, please consider giving it a star!</h3>
   
-  [![GitHub stars](https://img.shields.io/github/stars/SazzHub221/Plant-Disease-Classification?style=social)](https://github.com/SazzHub221/Plant-Disease-Classification/stargazers)
+  [![GitHub stars](https://img.shields.io/github/stars/SazzHub221/Plant-Disease-Detection?style=social)](https://github.com/SazzHub221/Plant-Disease-Detection/stargazers)
 </div>
+
+[![GitHub license](https://img.shields.io/github/license/SazzHub221/Plant-Disease-Detection)](https://github.com/SazzHub221/Plant-Disease-Detection/blob/main/LICENSE)
