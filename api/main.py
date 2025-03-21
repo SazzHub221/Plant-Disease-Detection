@@ -6,7 +6,7 @@ from io import BytesIO
 from PIL import Image
 import tensorflow as tf
 from fastapi.middleware.cors import CORSMiddleware
-from mangum import Handler
+
 
 app = FastAPI()
 
@@ -54,4 +54,3 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host='0.0.0.0', port=port)
 
-handler = Handler(app)
