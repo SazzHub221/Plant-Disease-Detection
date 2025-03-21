@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "export NODE_OPTIONS=--openssl-legacy-provider && npm run build",
   "outputDirectory": "build",
   "rewrites": [
     {
