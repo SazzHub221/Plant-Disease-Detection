@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "export NODE_OPTIONS=--openssl-legacy-provider && npm run build && npm install -g serve && serve -s build",
+  "buildCommand": "export NODE_OPTIONS=--openssl-legacy-provider && npm run build",
   "outputDirectory": "build",
   "routes": [
     {
