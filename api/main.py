@@ -31,36 +31,19 @@ app.add_middleware(
 # Print TensorFlow version for debugging
 print(f"TensorFlow version: {tf.__version__}")
 
-# Try different model formats until one works
-model_paths = [
-    "saved_models/Keras1.keras",
-    "saved_models/simple_model.keras",
-    "saved_models/simple_model.h5",
-    "saved_models/simple_model"
-]
-
-Kearas_MODEL = None
-
-for model_path in model_paths:
-    try:
-        print(f"Attempting to load model from {model_path}")
-        if model_path.endswith(".keras") or model_path.endswith(".h5"):
-            Kearas_MODEL = tf.keras.models.load_model(model_path)
-        else:
-            Kearas_MODEL = tf.saved_model.load(model_path)
-        print(f"Successfully loaded model from {model_path}")
-        break
-    except Exception as e:
-        print(f"Failed to load model from {model_path}: {e}")
-
-# If all loading attempts failed, use fallback model
-if Kearas_MODEL is None:
-    print("All model loading attempts failed. Using fallback model")
-    # Create a simple model directly
-    inputs = tf.keras.layers.Input(shape=(256, 256, 3))
-    x = tf.keras.layers.GlobalAveragePooling2D()(inputs)
-    outputs = tf.keras.layers.Dense(3, activation="softmax")(x)
-    Kearas_MODEL = tf.keras.Model(inputs=inputs, outputs=outputs)
+# Create a simple model directly in code
+print("Creating a simple model directly in code")
+inputs = tf.keras.layers.Input(shape=(256, 256, 3))
+x = tf.keras.layers.Conv2D(32, (3, 3), activation="relu")(inputs)
+x = tf.keras.layers.MaxPooling2D()(x)
+x = tf.keras.layers.Conv2D(64, (3, 3), activation="relu")(x)
+x = tf.keras.layers.MaxPooling2D()(x)
+x = tf.keras.layers.Conv2D(128, (3, 3), activation="relu")(x)
+x = tf.keras.layers.MaxPooling2D()(x)
+x = tf.keras.layers.Flatten()(x)
+x = tf.keras.layers.Dense(64, activation="relu")(x)
+outputs = tf.keras.layers.Dense(3, activation="softmax")(x)
+Kearas_MODEL = tf.keras.Model(inputs=inputs, outputs=outputs)
 
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
@@ -109,18 +92,17 @@ async def predict(file: UploadFile = File(...)):
             "confidence": 0.0
         }
 
+# Render.com specific port setup
 if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 8080))  # Use 8080 for Cloud Run
+    # Get port from environment variable (Render sets this automatically)
+    port = int(os.environ.get("PORT", 10000))
     
     # Display clear message about server running
     print(f"\n{'='*50}")
     print(f"🌱 Plant Disease Detection API Server is starting up!")
     print(f"{'='*50}")
-    print(f"Server URL: http://0.0.0.0:{port}")
-    print(f"To test the API locally: http://localhost:{port}/docs")
-    print(f"Press Ctrl+C to stop the server")
+    print(f"Using PORT: {port}")
     print(f"{'='*50}\n")
     
-    # Make sure to bind to 0.0.0.0, not 127.0.0.1
+    # Make sure to bind to 0.0.0.0 for Render
     uvicorn.run(app, host="0.0.0.0", port=port)
