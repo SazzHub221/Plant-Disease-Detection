@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "buildCommand": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build && serve -s build",
+  "buildCommand": "npm run build",
   "outputDirectory": "build",
   "routes": [
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
   "env": {
-    "REACT_APP_API_URL": "https://plant-disease-detection-yz5v.onrender.com/predict"
+    "REACT_APP_API_URL": "https://plant-disease-detection-yz5v.onrender.com/predict",
+    "NODE_OPTIONS": "--openssl-legacy-provider"
   }
 }
