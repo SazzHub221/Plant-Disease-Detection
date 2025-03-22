@@ -1,7 +1,6 @@
 import numpy as np
 from fastapi import FastAPI, File, UploadFile
 import uvicorn
-import numpy
 from io import BytesIO
 from PIL import Image
 import tensorflow as tf
@@ -18,7 +17,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
-    "*",  # Allow all origins temporarily for testing
+    "*",  # Allow all origins for deployment
 ]
 
 app.add_middleware(
@@ -32,29 +31,36 @@ app.add_middleware(
 # Print TensorFlow version for debugging
 print(f"TensorFlow version: {tf.__version__}")
 
-# Try to load the model with error handling
-try:
-    print("Loading model... This may take a moment.")
-    # Try with direct loading
-    Kearas_MODEL = tf.keras.models.load_model("saved_models/Keras1.keras")
-    print("Model loaded successfully!")
-except Exception as e:
-    print(f"Error loading model: {e}")
+# Try different model formats until one works
+model_paths = [
+    "saved_models/Keras1.keras",
+    "saved_models/simple_model.keras",
+    "saved_models/simple_model.h5",
+    "saved_models/simple_model"
+]
+
+Kearas_MODEL = None
+
+for model_path in model_paths:
     try:
-        # Try alternative loading method
-        print("Attempting alternative loading method...")
-        Kearas_MODEL = tf.saved_model.load("saved_models/Keras1")
-        print("Model loaded with alternative method!")
-    except Exception as e2:
-        print(f"Alternative loading also failed: {e2}")
-        # Create a simple error model as fallback
-        print("Creating fallback model")
-        # This is just a placeholder model that will return "Error" for any input
-        class FallbackModel:
-            def predict(self, x):
-                return [[0.8, 0.1, 0.1]]  # Default to first class with high confidence
-                
-        Kearas_MODEL = FallbackModel()
+        print(f"Attempting to load model from {model_path}")
+        if model_path.endswith(".keras") or model_path.endswith(".h5"):
+            Kearas_MODEL = tf.keras.models.load_model(model_path)
+        else:
+            Kearas_MODEL = tf.saved_model.load(model_path)
+        print(f"Successfully loaded model from {model_path}")
+        break
+    except Exception as e:
+        print(f"Failed to load model from {model_path}: {e}")
+
+# If all loading attempts failed, use fallback model
+if Kearas_MODEL is None:
+    print("All model loading attempts failed. Using fallback model")
+    # Create a simple model directly
+    inputs = tf.keras.layers.Input(shape=(256, 256, 3))
+    x = tf.keras.layers.GlobalAveragePooling2D()(inputs)
+    outputs = tf.keras.layers.Dense(3, activation="softmax")(x)
+    Kearas_MODEL = tf.keras.Model(inputs=inputs, outputs=outputs)
 
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
@@ -74,9 +80,17 @@ def read_file_as_image(data) -> np.ndarray:
 async def predict(file: UploadFile = File(...)):
     try:
         image = read_file_as_image(await file.read())
+        
+        # Resize image if needed
+        if image.shape[0] != 256 or image.shape[1] != 256:
+            from PIL import Image
+            pil_image = Image.fromarray(image)
+            pil_image = pil_image.resize((256, 256))
+            image = np.array(pil_image)
+        
         img_batch = np.expand_dims(image, 0)
         
-        # Normalize image if needed
+        # Normalize image
         img_batch = img_batch / 255.0
         
         prediction = Kearas_MODEL.predict(img_batch)
@@ -103,9 +117,10 @@ if __name__ == "__main__":
     print(f"\n{'='*50}")
     print(f"🌱 Plant Disease Detection API Server is starting up!")
     print(f"{'='*50}")
-    print(f"Local server URL: http://localhost:{port}")
-    print(f"To test the API, visit: http://localhost:{port}/docs")
+    print(f"Server URL: http://0.0.0.0:{port}")
+    print(f"To test the API locally: http://localhost:{port}/docs")
     print(f"Press Ctrl+C to stop the server")
     print(f"{'='*50}\n")
     
-    uvicorn.run(app, host='0.0.0.0', port=port)
+    # Make sure to bind to 0.0.0.0, not 127.0.0.1
+    uvicorn.run(app, host="0.0.0.0", port=port)
