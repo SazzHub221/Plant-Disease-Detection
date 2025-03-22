@@ -1,34 +1,12 @@
 {
   "version": 2,
-  "buildCommand": "export NODE_OPTIONS=--openssl-legacy-provider && npm run build",
+  "buildCommand": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build && serve -s build",
   "outputDirectory": "build",
   "routes": [
-    {
-      "src": "/predict",
-      "dest": "https://plant-disease-detection-yz5v.onrender.com/predict"
-    },
-    {
-      "src": "/ping",
-      "dest": "https://plant-disease-detection-yz5v.onrender.com/ping"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico"
-    },
-    {
-      "src": "/manifest.json",
-      "dest": "/manifest.json"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   "env": {
-    "REACT_APP_API_URL": "https://plant-disease-detection-yz5v.onrender.com"
+    "REACT_APP_API_URL": "https://plant-disease-detection-yz5v.onrender.com/predict"
   }
 }
