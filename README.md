@@ -19,11 +19,6 @@
 - ⚡ **Fast Processing**: Quick analysis and results delivery
 - 🔄 **Multiple Plant Support**: Works with various plant species
 
-## 🖥️ Demo
-
-<div align="center">
-  <img src="public/demo.gif" alt="Application Demo" width="600"/>
-</div>
 
 ## 🛠️ Tech Stack
 
