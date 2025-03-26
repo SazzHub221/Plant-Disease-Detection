@@ -1,1 +1,0 @@
-const response = await axios.post('/api/predict', formData); 
