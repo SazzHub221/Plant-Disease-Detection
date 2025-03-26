@@ -32,18 +32,8 @@ app.add_middleware(
 print(f"TensorFlow version: {tf.__version__}")
 
 # Create a simple model directly in code
-print("Creating a simple model directly in code")
-inputs = tf.keras.layers.Input(shape=(256, 256, 3))
-x = tf.keras.layers.Conv2D(32, (3, 3), activation="relu")(inputs)
-x = tf.keras.layers.MaxPooling2D()(x)
-x = tf.keras.layers.Conv2D(64, (3, 3), activation="relu")(x)
-x = tf.keras.layers.MaxPooling2D()(x)
-x = tf.keras.layers.Conv2D(128, (3, 3), activation="relu")(x)
-x = tf.keras.layers.MaxPooling2D()(x)
-x = tf.keras.layers.Flatten()(x)
-x = tf.keras.layers.Dense(64, activation="relu")(x)
-outputs = tf.keras.layers.Dense(3, activation="softmax")(x)
-Kearas_MODEL = tf.keras.Model(inputs=inputs, outputs=outputs)
+
+Kearas_MODEL = MODEL = tf.keras.models.load_model("saved_models/Keras1.keras")
 
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
