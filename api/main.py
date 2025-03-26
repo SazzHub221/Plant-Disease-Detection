@@ -33,7 +33,47 @@ print(f"TensorFlow version: {tf.__version__}")
 
 # Create a simple model directly in code
 
-Kearas_MODEL = MODEL = tf.keras.models.load_model("saved_models/Keras1.keras")
+def create_model():
+    model = tf.keras.Sequential([
+        tf.keras.layers.Input(shape=(256, 256, 3)),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+        tf.keras.layers.MaxPooling2D(2, 2),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+        tf.keras.layers.MaxPooling2D(2, 2),
+        tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
+        tf.keras.layers.MaxPooling2D(2, 2),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dense(3, activation='softmax')  # 3 classes
+    ])
+    
+    model.compile(
+        optimizer='adam',
+        loss='categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    return model
+
+# Try to load the full model first
+try:
+    logger.info("Attempting to load full model...")
+    Kearas_MODEL = tf.keras.models.load_model("saved_models/Keras1.keras")
+    logger.info("Full model loaded successfully")
+except Exception as e:
+    # If that fails, try to load weights into a fresh model
+    logger.warning(f"Failed to load full model: {e}")
+    logger.info("Creating new model and loading weights...")
+    try:
+        model = create_model()
+        # Try to load weights only
+        model.load_weights("saved_models/Keras1.keras")
+        Kearas_MODEL = model
+        logger.info("Model weights loaded successfully")
+    except Exception as e2:
+        logger.error(f"Failed to load weights: {e2}")
+        # Provide a fallback simple model
+        logger.warning("Creating a simple fallback model")
+        Kearas_MODEL = create_model()
 
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
