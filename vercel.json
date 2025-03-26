@@ -1,13 +1,12 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "build",
+  "outputDirectory": "dist",
   "routes": [
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
   "env": {
-    "REACT_APP_API_URL": "https://plant-disease-detection-yz5v.onrender.com/predict",
     "NODE_OPTIONS": "--openssl-legacy-provider"
   }
 }
