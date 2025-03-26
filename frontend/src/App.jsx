@@ -53,7 +53,7 @@ const ImageUpload = () => {
         setIsLoading(true);
         let res = await axios({
           method: "post",
-          url: import.meta.env.VITE_API_URL || "https://plant-disease-detection-yz5v.onrender.com/predict",
+          url: import.meta.env.VITE_API_URL || "https://us-central1-plant-disease-11109-r7.cloudfunctions.net/predict",
           data: formData,
           headers: {
             'Content-Type': 'multipart/form-data'
