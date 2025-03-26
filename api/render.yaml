@@ -4,7 +4,7 @@ services:
     runtime: python
     plan: free
     buildCommand: pip install -r api/requirements.txt
-    startCommand: python main.py
+    startCommand: uvicorn main:app --reload
     repo: https://github.com/SazzHub221/Plant-Disease-Detection.git
     branch: main
     envVars:
