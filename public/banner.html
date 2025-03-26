@@ -1,0 +1,54 @@
+<!-- Save this as banner.html -->
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.banner {
+    width: 1280px;
+    height: 320px;
+    background: linear-gradient(135deg, #1a472a, #2d5a3f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.content {
+    text-align: center;
+    z-index: 2;
+}
+
+.title {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 24px;
+    opacity: 0.9;
+}
+
+.leaf {
+    position: absolute;
+    font-size: 120px;
+    opacity: 0.1;
+}
+
+.leaf-1 { top: 20px; left: 50px; transform: rotate(-30deg); }
+.leaf-2 { bottom: 20px; right: 50px; transform: rotate(30deg); }
+</style>
+</head>
+<body>
+<div class="banner">
+    <div class="leaf leaf-1">🌿</div>
+    <div class="leaf leaf-2">🌱</div>
+    <div class="content">
+        <div class="title">Plant Disease Classification</div>
+        <div class="subtitle">AI-Powered Disease Detection System</div>
+    </div>
+</div>
+</body>
+</html>
