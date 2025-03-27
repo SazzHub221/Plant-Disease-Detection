@@ -1,15 +1,17 @@
-from flask import Flask, request,jsonify
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import Flask-CORS
 from google.cloud import storage
 import tensorflow as tf
 from PIL import Image
 import numpy as np
 
-BUCKET_NAME = 'plant-disease-model-2'
+BUCKET_NAME = 'plant-disease-model-1'
 class_names = ["Early Blight", "Late Blight", "Healthy"]
 
 model = None
 
 app = Flask(__name__)
+CORS(app)
 
 def download_blob(bucket_name, source_blob_name, destination_file_name):
     storage_client = storage.Client()
@@ -44,3 +46,9 @@ def predict(request):
     confidence = round(100 * (np.max(prediction)), 2)
 
     return jsonify({"class": predicted_class, "confidence": confidence})
+
+
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
